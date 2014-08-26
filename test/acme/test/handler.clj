@@ -8,5 +8,6 @@
   "main route"
   (app (mock/request :get "/")) =>  (contains [[:status 200], [:body  "Hello World"]])
   "not-found route"
-  (app (mock/request :get "/invalid")) => (contains [[:status 404]])
+  (:status (app (mock/request :get "/invalid"))) => 404
 )
+  
