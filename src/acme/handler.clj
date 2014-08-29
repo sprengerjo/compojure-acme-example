@@ -17,11 +17,16 @@
   "Gets the value for key from data"
   (data (keyword key)))
 
+(defn parse-int [s]
+  (Integer/parseInt (re-find #"\A-?\d+" s)))
+
 (defroutes app-routes
   (GET "/" [] "Hello World")
   (GET "/data/" [] (response data))
   (GET "/data/:id" [id] (response (get-data id)))
   (GET "/data/:id/:field" [id field] (response ((get-data id) (keyword field))))
+; game of live stuff
+  (GET "/neighbor/:x/:y" [x y] (response [(parse-int x) (parse-int y)]))
   (route/resources "/")
   (route/not-found "Not Found"))
 
