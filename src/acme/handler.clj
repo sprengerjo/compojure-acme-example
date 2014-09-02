@@ -3,7 +3,11 @@
             [compojure.handler :as handler]
             [compojure.route :as route]
             [ring.util.response :refer [resource-response response]]
-            [ring.middleware.json :as middleware]))
+            [ring.middleware.json :as middleware]
+            [clojure.string :as cstr]
+            )
+  (:use acme.gol)
+)
 
 (def data
   {:1 { :name "Bene"
@@ -17,8 +21,13 @@
   "Gets the value for key from data"
   (data (keyword key)))
 
-(defn parse-int [s]
-  (Integer/parseInt (re-find #"\A-?\d+" s)))
+(defn cell [x y]
+  into [] (map read-string [x y]))
+
+
+(defn cells [params]
+     (set (map (fn [i] (map read-string i)) (filter #(< 1(count %)) 
+        (partition-by #(= % " ") (filter #(not= % ",") (map str params)))))))
 
 (defroutes app-routes
   (GET "/" [] "Hello World")
@@ -26,7 +35,8 @@
   (GET "/data/:id" [id] (response (get-data id)))
   (GET "/data/:id/:field" [id field] (response ((get-data id) (keyword field))))
 ; game of live stuff
-  (GET "/neighbor/:x/:y" [x y] (response [(parse-int x) (parse-int y)]))
+  (GET "/neighbor/:x/:y" [x y] (response (neighbors (cell x y))))
+  (GET "/stepper" {params :params}  (response (step (cells (:cells params)))))
   (route/resources "/")
   (route/not-found "Not Found"))
 

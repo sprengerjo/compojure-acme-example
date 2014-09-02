@@ -20,6 +20,8 @@
 (facts 
   "neighors of 1 1"
   (neighbors [1 1]) => #{[0 0] [0 1] [0 2] [1 0] [1 2] [2 0] [2 1] [2 2]}
-  "get next blinker generation of blinker pattern"
+  "get next generation of blinker pattern"
   (step #{[1 0] [1 1] [1 2]}) => #{[2 1] [1 1] [0 1]}
+  "get next 5 generations of blinker pattern"
+  (take 5 (iterate step #{[1 0] [1 1] [1 2]})) =>  [#{[1 0] [1 1] [1 2]} #{[2 1] [1 1] [0 1]} #{[1 0] [1 1] [1 2]} #{[2 1] [1 1] [0 1]} #{[1 0] [1 1] [1 2]}]
   )
