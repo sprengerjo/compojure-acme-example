@@ -5,6 +5,7 @@
             [ring.util.response :refer [resource-response response]]
             [ring.middleware.json :as middleware]
             [clojure.string :as cstr]
+            [cheshire.core :as json]
             )
   (:use acme.gol)
 )
@@ -25,9 +26,10 @@
   into [] (map read-string [x y]))
 
 
-(defn cells [params]
-     (set (map (fn [i] (map read-string i)) (filter #(< 1(count %)) 
-        (partition-by #(= % " ") (filter #(not= % ",") (map str params)))))))
+(defn json-post [req]
+  (if (:body req)
+    (json/parse-string (slurp (:body req)))))
+
 
 (defroutes app-routes
   (GET "/" [] "Hello World")
@@ -36,7 +38,7 @@
   (GET "/data/:id/:field" [id field] (response ((get-data id) (keyword field))))
 ; game of live stuff
   (GET "/neighbor/:x/:y" [x y] (response (neighbors (cell x y))))
-  (GET "/stepper" {params :params}  (response (step (cells (:cells params)))))
+  (POST "/stepper" req (response (step (set (json-post req)))))
   (route/resources "/")
   (route/not-found "Not Found"))
 
