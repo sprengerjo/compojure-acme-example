@@ -5,7 +5,8 @@
                  [compojure "1.1.8"]
                  [ring/ring-core "1.2.0"]
                  [ring/ring-json "0.2.0"]
-                 [midje "1.6.3"]]
+                 [midje "1.6.3"]
+                 [cheshire "5.3.1"]]
   :plugins [[lein-ring "0.8.11"]]
   :ring {:handler acme.handler/app}
   :profiles

@@ -25,12 +25,6 @@
 (defn cell [x y]
   into [] (map read-string [x y]))
 
-
-(defn json-post [req]
-  (if (:body req)
-    (json/parse-string (slurp (:body req)))))
-
-
 (defroutes app-routes
   (GET "/" [] "Hello World")
   (GET "/data/" [] (response data))
@@ -38,7 +32,7 @@
   (GET "/data/:id/:field" [id field] (response ((get-data id) (keyword field))))
 ; game of live stuff
   (GET "/neighbor/:x/:y" [x y] (response (neighbors (cell x y))))
-  (POST "/stepper" req (response (step (set (json-post req)))))
+  (POST "/stepper" req  (response (step (set (:body req)))))
   (route/resources "/")
   (route/not-found "Not Found"))
 
